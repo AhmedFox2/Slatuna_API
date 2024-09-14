@@ -1,0 +1,7 @@
+fastapi
+os
+json
+bs4
+requests
+datetime
+urllib
