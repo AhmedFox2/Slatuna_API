@@ -62,19 +62,16 @@ async def main():
 
 @app.get("/pray_times")
 async def main():
-    try:
-        json_data = load_json_file()
-        response = urlopen('http://ipinfo.io/json')
-        data = j.load(response)
-        city = data["city"]
+    json_data = load_json_file()
+    response = urlopen('http://ipinfo.io/json')
+    data = j.load(response)
+    city = data["city"]
         
-        current_date = dt.datetime.now().date()
-        current_year, current_month, current_day = current_date.year, current_date.month, current_date.day
+    current_date = dt.datetime.now().date()
+    current_year, current_month, current_day = current_date.year, current_date.month, current_date.day
 
-        for month in range(current_month, 13):
-            times_table = fetch_prayer_times(city, current_year, month)
-            date_list, times_list, times_during_list = process_prayer_times(times_table)
-            update_json_with_prayer_times(json_data, date_list, times_list, times_during_list)
-        return json_data
-    except Exception as e:
-        return {"msg":f"{e}"}
+    for month in range(current_month, 13):
+        times_table = fetch_prayer_times(city, current_year, month)
+        date_list, times_list, times_during_list = process_prayer_times(times_table)
+        update_json_with_prayer_times(json_data, date_list, times_list, times_during_list)
+    return json_data
