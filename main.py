@@ -1,6 +1,5 @@
-from fastapi import FastAPI , Query
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
 import json as j 
 from bs4 import BeautifulSoup as bs
 import requests as rq
@@ -9,11 +8,8 @@ from urllib.request import urlopen
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware,
-    allow_origins=["*"],  allow_methods=["*"],allow_headers=["*"],
+    allow_origins=["*"],allow_credentials=True  ,allow_methods=["*"],allow_headers=["*"],
 )
-
-loc = os.path.dirname(__file__)
-os.chdir(loc)
 
 # تحميل ملف JSON
 def load_json_file():
