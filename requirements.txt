@@ -1,8 +1,7 @@
 fastapi
-os
 json
 bs4
 requests
 datetime
 urllib
-uvicorn[standard]
+uvicorn
