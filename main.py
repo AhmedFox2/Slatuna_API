@@ -19,18 +19,18 @@ os.chdir(loc)
 def load_json_file():
     while True:
         try:
-            with open(f"{loc}/database.json", "r") as thefile:
+            with open(f"/var/task/database.json", "r") as thefile:
                 return j.load(thefile)
         except (j.decoder.JSONDecodeError, FileNotFoundError):
             initial_data = {
                 "times":[]
             }
-            with open(f"{loc}/database.json", "w") as controler:
+            with open(f"/var/task/database.json", "w") as controler:
                 j.dump(initial_data, controler, indent=4)
 
 # حفظ ملف JSON
 def save_json_file(data):
-    with open(f"{loc}/database.json", "w") as f:
+    with open(f"/var/task/database.json", "w") as f:
         j.dump(data, f, indent=4)
 
 # تحميل أوقات الصلاة
@@ -60,6 +60,9 @@ def update_json_with_prayer_times(json_data, date_list, times_list, times_during
         json_data["times"].append(daily_times)
     save_json_file(json_data)
 
+@app.get("/pray_times")
+async def main():
+    return {"msg":"Welcome to slatuna API if there is an error tell me on github 'https://github.com/AhmedFox2/Slatuna_API'"}
 
 @app.get("/pray_times")
 async def main():
