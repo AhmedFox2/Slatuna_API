@@ -11,22 +11,20 @@ app.add_middleware(CORSMiddleware,
     allow_origins=["*"],allow_credentials=True  ,allow_methods=["*"],allow_headers=["*"],
 )
 
-# تحميل ملف JSON
+# تحميل ملف JSON من المسار المؤقت
 def load_json_file():
-    while True:
-        try:
-            with open(f"/var/task/database.json", "r") as thefile:
-                return j.load(thefile)
-        except (j.decoder.JSONDecodeError, FileNotFoundError):
-            initial_data = {
-                "times":[]
-            }
-            with open(f"/var/task/database.json", "w") as controler:
-                j.dump(initial_data, controler, indent=4)
+    try:
+        with open("/tmp/database.json", "r") as thefile:
+            return j.load(thefile)
+    except (j.decoder.JSONDecodeError, FileNotFoundError):
+        initial_data = {"times":[]}
+        with open("/tmp/database.json", "w") as controler:
+            j.dump(initial_data, controler, indent=4)
+        return initial_data
 
-# حفظ ملف JSON
+# حفظ ملف JSON في المسار المؤقت
 def save_json_file(data):
-    with open(f"/var/task/database.json", "w") as f:
+    with open("/tmp/database.json", "w") as f:
         j.dump(data, f, indent=4)
 
 # تحميل أوقات الصلاة
@@ -62,16 +60,19 @@ async def main():
 
 @app.get("/pray_times")
 async def main():
-    json_data = load_json_file()
-    response = urlopen('http://ipinfo.io/json')
-    data = j.load(response)
-    city = data["city"]
+    try:
+        json_data = load_json_file()
+        response = urlopen('http://ipinfo.io/json')
+        data = j.load(response)
+        city = data["city"]
         
-    current_date = dt.datetime.now().date()
-    current_year, current_month, current_day = current_date.year, current_date.month, current_date.day
+        current_date = dt.datetime.now().date()
+        current_year, current_month, current_day = current_date.year, current_date.month, current_date.day
 
-    for month in range(current_month, 13):
-        times_table = fetch_prayer_times(city, current_year, month)
-        date_list, times_list, times_during_list = process_prayer_times(times_table)
-        update_json_with_prayer_times(json_data, date_list, times_list, times_during_list)
-    return json_data
+        for month in range(current_month, 13):
+            times_table = fetch_prayer_times(city, current_year, month)
+            date_list, times_list, times_during_list = process_prayer_times(times_table)
+            update_json_with_prayer_times(json_data, date_list, times_list, times_during_list)
+        return json_data
+    except Exception as e:
+        return {"msg":f"{e}"}
