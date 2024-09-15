@@ -60,7 +60,7 @@ def update_json_with_prayer_times(json_data, date_list, times_list, times_during
         json_data["times"].append(daily_times)
     save_json_file(json_data)
 
-@app.get("/pray_times")
+@app.get("/")
 async def main():
     return {"msg":"Welcome to slatuna API if there is an error tell me on github 'https://github.com/AhmedFox2/Slatuna_API'"}
 
