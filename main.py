@@ -73,6 +73,6 @@ async def main():
             times_table = fetch_prayer_times(city, current_year, month)
             date_list, times_list, times_during_list = process_prayer_times(times_table)
             update_json_with_prayer_times(json_data, date_list, times_list, times_during_list)
-        return json_data
+        return {"location": city , "times": json_data}
     except Exception as e:
         return {"msg":f"{e}"}
