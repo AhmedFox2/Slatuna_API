@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , Request
 from fastapi.middleware.cors import CORSMiddleware
 import json as j 
 from bs4 import BeautifulSoup as bs
@@ -59,10 +59,19 @@ async def main():
     return {"msg":"Welcome to slatuna API if there is an error tell me on github 'https://github.com/AhmedFox2/Slatuna_API'"}
 
 @app.get("/pray_times")
-async def main():
+async def main(request: Request):
     try:
+        # نحاول الحصول على الـ IP من الهيدر `X-Forwarded-For`
+        if 'x-forwarded-for' in request.headers:
+            user_ip = request.headers['x-forwarded-for'].split(',')[0]
+        else:
+            # إذا لم يكن الهيدر موجود، نستخدم الـ IP الخاص بالطلب
+            user_ip = request.client.host
+
+    # هنا تقوم بإضافة الكود الذي يستخدم user_ip لتحديد الموقع
+    # كمثال:
         json_data = load_json_file()
-        response = urlopen('http://ipinfo.io/json')
+        response = urlopen(f'ipinfo.io/{user_ip}?token=5b48f41824c302')
         data = j.load(response)
         city = data["city"]
         
