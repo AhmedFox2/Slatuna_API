@@ -71,7 +71,7 @@ async def main(request: Request):
     # هنا تقوم بإضافة الكود الذي يستخدم user_ip لتحديد الموقع
     # كمثال:
         json_data = load_json_file()
-        response = urlopen(f'ipinfo.io/{user_ip}?token=5b48f41824c302')
+        response = urlopen(f'https://ipinfo.io/{user_ip}/json?token=5b48f41824c302')
         data = j.load(response)
         city = data["city"]
         
